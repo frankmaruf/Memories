@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FileBase from "react-file-base64";
 import useStyles from "./styles";
-import { createPost } from "../../actions/posts";
-const Forms = () => {
+import { createPost, updatePost } from "../../actions/posts";
+const Forms = ({ currentId, setCurrentId }) => {
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((post) => post._id === currentId) : null
+  );
   const [postData, setPostData] = React.useState({
     creator: "",
     title: "",
@@ -13,15 +16,35 @@ const Forms = () => {
     selectedFile: "",
   });
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (post) {
+      setPostData(post);
+    }
+  }, [post]);
   const classes = useStyles();
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPost(postData));
+    if (currentId) {
+      dispatch(updatePost(currentId, postData));
+    } else {
+      dispatch(createPost(postData));
+    }
+    clear();
     console.log("submit");
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPostData({ ...postData, [name]: value });
+  };
+  const clear = () => {
+    setCurrentId(null);
+    setPostData({
+      creator: "",
+      title: "",
+      message: "",
+      tags: "",
+      selectedFile: "",
+    });
   };
   return (
     <Paper className={classes.paper}>
@@ -31,7 +54,9 @@ const Forms = () => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Creating a Memory</Typography>
+        <Typography variant="h6">
+          {currentId ? "Editing" : "Creating"} a Memory
+        </Typography>
         <TextField
           name="creator"
           variant="outlined"
@@ -75,7 +100,6 @@ const Forms = () => {
         </div>
         <Button
           className={classes.buttonSubmit}
-          variant="container"
           color="primary"
           size="large"
           type="submit"
@@ -88,16 +112,8 @@ const Forms = () => {
           variant="contained"
           color="inherit"
           size="small"
-          type="submit"
-          onClick={() => {
-            setPostData({
-              creator: "",
-              title: "",
-              message: "",
-              tags: "",
-              selectedFile: "",
-            });
-          }}
+          type="button"
+          onClick={clear}
           fullWidth
         >
           <Typography variant="h6">Clear</Typography>

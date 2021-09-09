@@ -5,23 +5,69 @@ import {
   DELETE,
   LIKE,
 } from "../constants/actionTypes";
+
 import * as api from "../api/index.js";
 
+const url = "http://localhost:7000/posts";
+
 export const getPosts = () => async (dispatch) => {
-  try {
-    const { data } = api.fetchPosts();
-    dispatch({ type: FETCH_ALL, payload: data });
-  } catch (error) {
-    console.log(error.message);
-  }
+  fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      //  "Authorization": "Bearer " + localStorage.getItem("token")
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      dispatch({
+        type: FETCH_ALL,
+        payload: data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const createPost = (post) => async (dispatch) => {
-  try {
-    const { data } = api.createPost(post);
-
-    dispatch({ type: CREATE, payload: data });
-  } catch (error) {
-    console.log(error.message);
-  }
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(post),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      dispatch({
+        type: CREATE,
+        payload: data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+export const updatePost = (currentId, Updatepost) => async (dispatch) => {
+  // patch request
+  fetch(`${url}/${currentId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(Updatepost),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      dispatch({
+        type: UPDATE,
+        payload: data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
