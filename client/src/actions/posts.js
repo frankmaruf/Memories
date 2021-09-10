@@ -71,3 +71,22 @@ export const updatePost = (currentId, Updatepost) => async (dispatch) => {
       console.log(error);
     });
 };
+
+export const deletePost = (currentId) => async (dispatch) => {
+  fetch(`${url}/${currentId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      dispatch({
+        type: DELETE,
+        payload: currentId,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};

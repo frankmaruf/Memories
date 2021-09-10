@@ -21,6 +21,11 @@ import postRouter from "./routes/posts.js";
 //     message: "Welcome to the API of Memories by Frank Maruf",
 //   });
 // });
+app.get("/", (req, res) => {
+  res.json({
+    message: "Welcome to the API of Memories by Frank Maruf",
+  });
+});
 app.use("/posts", postRouter);
 
 mongoose

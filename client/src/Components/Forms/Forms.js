@@ -82,12 +82,17 @@ const Forms = ({ currentId, setCurrentId }) => {
           onChange={handleChange}
         />
         <TextField
-          name="tags"
           variant="outlined"
           label="Tags"
+          name="tags"
           fullWidth
           value={postData.tags}
-          onChange={handleChange}
+          onChange={(e) => {
+            setPostData({
+              ...postData,
+              tags: e.target.value.split(",").map((tag) => tag.trim()),
+            });
+          }}
         />
         <div className={classes.fileInput}>
           <FileBase
