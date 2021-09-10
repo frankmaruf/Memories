@@ -10,7 +10,7 @@ import {
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { deletePost } from "../../../actions/posts";
+import { deletePost, likePost } from "../../../actions/posts";
 import moment from "moment";
 import useStyles from "./styles";
 import { useDispatch } from "react-redux";
@@ -20,12 +20,20 @@ const Post = ({ post, setCurrentId }) => {
   return (
     <>
       <Card className={classes.card}>
-        <CardMedia
-          className={classes.media}
-          image={post.selectedFile}
-          title={post.title}
-          component="img"
-        />
+        {!post.selectedFile ? (
+          <Typography
+            className={classes.textTitle}
+            gutterBottom
+            variant="h5"
+            component="h2"
+          >
+            {post.title}
+          </Typography>
+        ) : (
+          <>
+            <CardMedia className={classes.media} image={post.selectedFile} />
+          </>
+        )}
         <div className={classes.overlay}>
           <Typography variant="h6">{post.creator}</Typography>
           <Typography variant="body2">
@@ -48,18 +56,28 @@ const Post = ({ post, setCurrentId }) => {
             {post.tags.map((tag) => `#${tag}`)}
           </Typography>
         </div>
-        <Typography className={classes.title} variant="h5" gutterBottom>
-          {post.title}
-        </Typography>
+        {!post.selectedFile ? (
+          <Typography className={classes.title} variant="h5" gutterBottom>
+            {post.title}
+          </Typography>
+        ) : (
+          <Typography className={classes.title} variant="h5" gutterBottom>
+            {post.title}
+          </Typography>
+        )}
         <CardContent>
           <Typography component="p" color="textSecondary" variant="body2">
             {post.message}
           </Typography>
         </CardContent>
         <CardActions className={classes.cardActions}>
-          <Button size="small" color="primary" onClick={() => {}}>
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => dispatch(likePost(post._id))}
+          >
             <ThumbUpAltIcon fontSize="small" />
-            Like
+            &nbsp; Like &nbsp;
             {post.likeCount}
           </Button>
           <Button

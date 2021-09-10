@@ -14,7 +14,7 @@ const postScema = new Schema({
   },
   tags: [String],
   selectedFile: String,
-  listCount: {
+  likeCount: {
     type: Number,
     default: 0,
   },

@@ -45,6 +45,29 @@ export const updatePost = async (req, res) => {
   res.json(updatedPost);
 };
 
+export const likePost = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+  const post = await PostMessage.findById(id);
+  if (!post) return res.status(404).send(`No post with id: ${id}`);
+  post.likeCount++;
+  await post.save();
+  res.json(post);
+};
+
+export const unLikePost = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+  const post = await PostMessage.findById(id);
+  if (!post) return res.status(404).send(`No post with id: ${id}`);
+  if (!post.likeCount > 0) return res.status(404).send(`Can't de < 0: ${id}`);
+  post.likeCount--;
+  await post.save();
+  res.json(post);
+};
+
 export const deletePost = async (req, res) => {
   const { id } = req.params;
 

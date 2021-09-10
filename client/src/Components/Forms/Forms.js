@@ -63,6 +63,7 @@ const Forms = ({ currentId, setCurrentId }) => {
           label="Creator"
           fullWidth
           value={postData.creator}
+          inputProps={{ maxLength: 15 }}
           onChange={handleChange}
         />
         <TextField
@@ -71,6 +72,7 @@ const Forms = ({ currentId, setCurrentId }) => {
           label="Title"
           fullWidth
           value={postData.title}
+          inputProps={{ maxLength: 50 }}
           onChange={handleChange}
         />
         <TextField
@@ -79,6 +81,9 @@ const Forms = ({ currentId, setCurrentId }) => {
           label="Message"
           fullWidth
           value={postData.message}
+          inputProps={{
+            maxLength: 300,
+          }}
           onChange={handleChange}
         />
         <TextField
