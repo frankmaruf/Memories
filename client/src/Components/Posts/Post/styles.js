@@ -59,4 +59,8 @@ export default makeStyles({
     display: "flex",
     justifyContent: "space-between",
   },
+
+  creator_text: {
+    color: "#a6fffc",
+  },
 });

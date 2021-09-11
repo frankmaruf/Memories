@@ -35,7 +35,12 @@ const Post = ({ post, setCurrentId }) => {
           </>
         )}
         <div className={classes.overlay}>
-          <Typography variant="h6">{post.creator}</Typography>
+          <Typography
+            className={!post.selectedFile && classes.creator_text}
+            variant="h6"
+          >
+            {post.creator}
+          </Typography>
           <Typography variant="body2">
             {moment(post.createdAt).fromNow()}
           </Typography>
@@ -53,7 +58,10 @@ const Post = ({ post, setCurrentId }) => {
         </div>
         <div className={classes.details}>
           <Typography color="textSecondary" variant="body2">
-            {post.tags.map((tag) => `#${tag}`)}
+            {/* {post.tags.map((tag) => `#${tag}`)} */}
+            {post.tags.length > 0
+              ? post.tags.map((tag) => ` #${tag}`)
+              : "No tags"}
           </Typography>
         </div>
         {post.selectedFile && (
