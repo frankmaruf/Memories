@@ -15,8 +15,11 @@ import Icon from "./icon";
 import Input from "./Input";
 import useStyles from "./styles.js";
 import { LOGIN } from "../../constants/actionTypes";
+import { signIn, signUp } from "../../actions/auth_user";
 import dotenv from "dotenv";
-dotenv.config();
+import dotenvExpand from "dotenv-expand";
+var myEnv = dotenv.config();
+dotenvExpand(myEnv);
 
 const initialState = {
   firstName: "",
@@ -33,18 +36,27 @@ const Auth = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const handleShowPassword = () => setShowPassword(!showPassword);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
   const switchMode = () => {
     setIsSignUp(!isSignUp);
     handleShowPassword(false);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(form);
+    if (isSignUp) {
+      dispatch(signUp(form, history));
+      history.push("/");
+    }
+
+    if (!isSignUp) {
+      dispatch(signIn(form, history));
+    }
+  };
   const googleSuccess = async (res) => {
-    console.log(res);
     const result = res?.profileObj;
     const token = res?.tokenObj;
     const accessToken = token?.access_token;
@@ -53,7 +65,7 @@ const Auth = () => {
       firstName: result?.givenName,
       lastName: result?.familyName,
       email: result?.email,
-      imgUr: result?.imageUrl,
+      imageUrl: result?.imageUrl,
       name: result?.name,
     };
     try {
@@ -61,7 +73,7 @@ const Auth = () => {
       // await dispatch({ type: "SET_TOKEN", payload: accessToken });
       // await dispatch({ type: "SET_USER", payload: user });
       // await dispatch({ type: "SET_IS_LOGGED_IN", payload: true });
-      // history.push("/");
+      history.push("/");
     } catch (error) {
       console.log(error);
     }
@@ -87,7 +99,7 @@ const Auth = () => {
                   <Input
                     name="firstName"
                     label="First Name"
-                    onChange={handleChange}
+                    handleChange={handleChange}
                     autoFocus
                     half
                   ></Input>
@@ -95,7 +107,7 @@ const Auth = () => {
                   <Input
                     name="lastName"
                     label="Last Name"
-                    onChange={handleChange}
+                    handleChange={handleChange}
                     half
                   ></Input>
                 </>

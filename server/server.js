@@ -6,27 +6,30 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(express.json({ limit: "30mb" }));
-app.use(express.urlencoded({ extended: true, limit: "30mb" }));
-app.use(cors());
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 //Importing routes
 import postRouter from "./routes/posts.js";
+import userRouter from "./routes/user.js";
 //Routes
-// app.use("/", (req, res) => {
-//   // res.send(
-//   //   "<div style=text-align:center>Welcome to the API of Memories by <h1>Frank Maruf<h1></div>"
-//   // );
-//   res.json({
-//     message: "Welcome to the API of Memories by Frank Maruf",
-//   });
-// });
 app.get("/", (req, res) => {
   res.json({
     message: "Welcome to the API of Memories by Frank Maruf",
   });
 });
 app.use("/posts", postRouter);
+app.use("/user", userRouter);
 
 mongoose
   .connect(process.env.DB_CONNECTION, {

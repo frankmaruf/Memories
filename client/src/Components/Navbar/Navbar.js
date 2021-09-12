@@ -1,10 +1,35 @@
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import React from "react";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import useStyles from "./styles.js";
+import { LOGOUT } from "../../constants/actionTypes.js";
 const Navbar = () => {
   const classes = useStyles();
-  const user = null;
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+
+  // const tokenId = localStorage.getItem("tokenId");
+
+  // const accessToken = localStorage.getItem("accessToken");
+  const logout = () => {
+    dispatch({
+      type: LOGOUT,
+    });
+    localStorage.clear();
+    history.push("/");
+    setUser(null);
+  };
+  const [user, setUser] = useState(userInfo);
+  useEffect(() => {
+    if (userInfo) {
+      setUser(userInfo);
+    }
+  }, [location]);
+
   return (
     <>
       <AppBar className={classes.appBar} position="static" color="inherit">
@@ -34,14 +59,15 @@ const Navbar = () => {
               <Avatar
                 className={classes.purple}
                 alt={user.name}
-                src={user.result.imageUrl}
+                src={user.imageUrl}
               >
-                {user.result.name.charAt(0)}
+                {user.name.charAt(0)}
               </Avatar>
               <Typography className={classes.userName} variant="h6">
-                {user.result.name}
+                {user.name}
               </Typography>
               <Button
+                onClick={logout}
                 variant="contained"
                 color="secondary"
                 className={classes.logout}

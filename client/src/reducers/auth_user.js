@@ -15,11 +15,22 @@ export const authUser = (
       localStorage.setItem("user", JSON.stringify({ ...action?.payload.user }));
       localStorage.setItem("tokenId", action?.payload.idToken);
       localStorage.setItem("accessToken", action.payload.accessToken);
+      console.log("From reducer" + JSON.parse(localStorage.getItem("user")));
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.user,
         tokenId: action.payload.idToken,
         accessToken: action.payload.accessToken,
+      };
+    case LOGOUT:
+      localStorage.removeItem("user");
+      localStorage.removeItem("tokenId");
+      localStorage.removeItem("accessToken");
+      return {
+        ...state,
+        user: {},
+        tokenId: "",
+        accessToken: "",
       };
     default:
       return state;
